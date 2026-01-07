@@ -1,0 +1,31 @@
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+import java.util.concurrent.*;
+class Main {
+    public static void main(String[] args) {
+       
+        try{
+             CompletableFuture<String> future= CompletableFuture.supplyAsync(()-> {return "hello";}).thenApply(s-> s+" World").thenApply(String::toUpperCase);
+        System.out.println("CompletableFuture Chaining result: "+future.get());
+        //without Blocking
+        future.thenAccept(res->System.out.println(res));
+        //experimenting with method reference
+         future.thenAccept(System.out::println);
+         
+         //thenCompose for chaining dependent future
+         CompletableFuture<Integer> futureInt= CompletableFuture.supplyAsync(()-> "123").thenCompose(s->CompletableFuture.supplyAsync(()-> Integer.parseInt(s)));
+         futureInt.thenAccept(System.out::println);
+         Integer resultCompose= futureInt.get();
+         System.out.println("result from get: "+resultCompose);
+         
+         //thenCombine combine two Indepedent Future
+         CompletableFuture<String> future1= CompletableFuture.supplyAsync(()-> "Hello");
+         CompletableFuture<String> future2= CompletableFuture.supplyAsync(()-> "World");
+         CompletableFuture<String> combined= future1.thenCombine(future2, (s1,s2)->s1+" "+s2);
+         System.out.println("Combined future: "+combined.get());
+        }catch(Exception ex){
+            System.out.println("Exception: "+ex);
+        }
+        System.out.println("Try programiz.pro");
+    }
+}
