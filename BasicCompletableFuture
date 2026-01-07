@@ -1,0 +1,38 @@
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+import java.util.concurrent.*;
+class Main {
+    public static void main(String[] args) {
+        
+        try{
+            CompletableFuture<String> completedFuture=CompletableFuture.completedFuture("Hello");
+             System.out.println(completedFuture.get()); 
+            //run async - no return value
+            CompletableFuture<Void> runAsync= CompletableFuture.runAsync(()->System.out.println("Thread Name: "+Thread.currentThread().getName()));
+            CompletableFuture<String> supplyAsync= CompletableFuture.supplyAsync(()->{
+                try{
+                    Thread.sleep(5000);
+                } catch(Exception ex){
+                     System.out.println("Exception: "+ ex);
+                }
+               
+                return "result from Async Completable task";
+            });
+            
+            //Block and get result
+            String res= supplyAsync.get();
+            System.out.println("Block and get Result res: "+ res);
+             //Block and get result
+            String res2= supplyAsync.get();
+            System.out.println("Block and get Result res2: "+ res2);
+            
+            //NonBlocking callBack
+            supplyAsync.thenAccept(res1-> System.out.println("Non Blocking call: "+res1));
+          
+        } catch(Exception ex){
+            System.out.println("Exception: "+ ex);
+        }
+        
+        System.out.println("Try programiz.pro");
+    }
+}
